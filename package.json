@@ -6,6 +6,9 @@
   "scripts": {
     "demo": "node src/run.mjs",
     "demo:multichannel": "node src/run.mjs --epochs=3 --warmupEpochs=1 --voice=on --voiceFromEpoch=2",
+    "demo:showcase": "pnpm reset && pnpm demo:multichannel && (pnpm webhook:listen:once > /tmp/ruya-webhook.log 2>&1 &) && sleep 1 && pnpm webhook:replay && sleep 1 && cat /tmp/ruya-webhook.log",
+    "judge:test": "pnpm demo:showcase",
+    "judge:test:secure": "pnpm reset && pnpm demo:multichannel && (ELEVENLABS_WEBHOOK_SECRET=whsec_judge pnpm webhook:listen:once > /tmp/ruya-webhook-secure.log 2>&1 &) && sleep 1 && ELEVENLABS_WEBHOOK_SECRET=whsec_judge pnpm webhook:replay && sleep 1 && cat /tmp/ruya-webhook-secure.log",
     "reset": "node src/reset.mjs",
     "webhook:listen": "node src/webhook-server.mjs",
     "webhook:listen:once": "node src/webhook-server.mjs --once=true",

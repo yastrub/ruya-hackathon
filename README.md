@@ -34,6 +34,28 @@ From repository root:
 pnpm --filter @tatiana/ruya-hackathon demo
 ```
 
+## Judge self-test (copy-paste)
+
+From repository root:
+
+```bash
+pnpm --filter @tatiana/ruya-hackathon judge:test
+```
+
+Secure variant (signature verification ON):
+
+```bash
+pnpm --filter @tatiana/ruya-hackathon judge:test:secure
+```
+
+Expected proof markers in terminal output:
+
+- `Epoch 1 avg score: 7.417`
+- `Epoch 2 avg score: 7.817`
+- `voice=SIMULATED` and `Voice follow-ups triggered: 6`
+- `Status: 200` for webhook replay
+- secure mode: `Signature verification: enabled`
+
 Optional controls:
 
 ```bash
