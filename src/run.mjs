@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { startElevenLabsOutboundCall } from './elevenlabs-outbound.mjs';
+import { evaluateLeadAdaptive } from './llm-evaluator.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,43 +74,6 @@ function pickBestStrategy(memory, objectionType) {
 
 function pickWarmupStrategy(index) {
   return STRATEGIES[index % STRATEGIES.length];
-}
-
-function evaluateLead({ lead, strategy, response }) {
-  let score = 5.5;
-
-  const objectionBoost = {
-    price: { consultative: 1.0, social_proof: 0.7, urgent_offer: 0.2 },
-    trust: { consultative: 0.8, social_proof: 1.2, urgent_offer: 0.2 },
-    timing: { consultative: 0.6, social_proof: 0.4, urgent_offer: 1.1 },
-    results: { consultative: 0.7, social_proof: 1.0, urgent_offer: 0.3 },
-    complexity: { consultative: 1.1, social_proof: 0.5, urgent_offer: 0.1 },
-    urgency: { consultative: 0.5, social_proof: 0.4, urgent_offer: 1.0 },
-  };
-
-  score += objectionBoost[lead.objectionType]?.[strategy] ?? 0.2;
-
-  if (response.includes(lead.name)) score += 0.4;
-  if (response.includes(lead.goal)) score += 0.6;
-  if (response.toLowerCase().includes('step')) score += 0.4;
-  if (response.toLowerCase().includes('week')) score += 0.2;
-
-  const sentimentPenalty = {
-    skeptical: -0.2,
-    overwhelmed: -0.2,
-  };
-  score += sentimentPenalty[lead.sentiment] ?? 0;
-
-  if (strategy === 'urgent_offer' && ['skeptical', 'overwhelmed'].includes(lead.sentiment)) {
-    score -= 0.3;
-  }
-
-  const bounded = Math.max(1, Math.min(10, score));
-  const conversionProbability = Math.max(0.05, Math.min(0.92, (bounded - 3) / 8));
-  return {
-    score: Number(bounded.toFixed(2)),
-    conversionProbability: Number(conversionProbability.toFixed(2)),
-  };
 }
 
 function updateMemory(memory, lead, strategy, result, epoch, response, candidateScores) {
@@ -233,7 +197,7 @@ async function main() {
       const candidateScores = {};
       for (const candidateStrategy of STRATEGIES) {
         const candidateResponse = buildResponse(candidateStrategy, lead);
-        candidateScores[candidateStrategy] = evaluateLead({
+        candidateScores[candidateStrategy] = await evaluateLeadAdaptive({
           lead,
           strategy: candidateStrategy,
           response: candidateResponse,
@@ -286,10 +250,11 @@ async function main() {
         bestCandidateStrategy: bestCandidate?.[0] ?? strategy,
         bestCandidateScore: bestCandidate?.[1]?.score ?? result.score,
         voice,
+        evaluator: result.source,
       });
 
       console.log(
-        `${lead.id} | ch=${String(lead.channel).padEnd(12)} | objection=${lead.objectionType.padEnd(10)} | strategy=${strategy.padEnd(12)} | score=${result.score.toFixed(2)} | best=${String(bestCandidate?.[0] ?? strategy).padEnd(12)} | voice=${voice.attempted ? String(voice.status) : 'skip'}`,
+        `${lead.id} | ch=${String(lead.channel).padEnd(12)} | objection=${lead.objectionType.padEnd(10)} | strategy=${strategy.padEnd(12)} | score=${result.score.toFixed(2)} | eval=${String(result.source).padEnd(13)} | best=${String(bestCandidate?.[0] ?? strategy).padEnd(12)} | voice=${voice.attempted ? String(voice.status) : 'skip'}`,
       );
     }
 
@@ -320,6 +285,11 @@ async function main() {
       voiceEnabled: voiceChannelEnabled,
       voiceMode: process.env.VOICE_MODE ?? 'dry-run',
       voiceFollowups,
+    },
+    evaluator: {
+      mode: process.env.EVALUATOR_MODE ?? 'auto',
+      model: process.env.EVALUATOR_MODEL ?? 'gpt-4o-mini',
+      apiUrl: process.env.EVALUATOR_API_URL ?? 'https://api.openai.com/v1/chat/completions',
     },
   };
 

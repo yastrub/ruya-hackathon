@@ -77,6 +77,23 @@ Optional variables:
 
 Reference template: `voice.config.example.json`
 
+## LLM-based evaluator (with rule fallback)
+
+The scoring engine now supports an LLM judge and falls back to rule-based scoring if LLM is unavailable.
+
+Modes:
+
+- `EVALUATOR_MODE=auto` (default): use LLM if `EVALUATOR_API_KEY` is set, else use rules
+- `EVALUATOR_MODE=llm`: force LLM evaluation
+- `EVALUATOR_MODE=rule`: force rule-based evaluation
+
+Evaluator env vars:
+
+- `EVALUATOR_API_KEY` (required for LLM)
+- `EVALUATOR_API_URL` (default: OpenAI chat completions URL)
+- `EVALUATOR_MODEL` (default: `gpt-4o-mini`)
+- `EVALUATOR_TIMEOUT_MS` (default: `12000`)
+
 ## Post-call webhook stub (duration + transcript)
 
 This project includes a local webhook endpoint to ingest ElevenLabs `post_call_transcription` events and extract learning signals.
@@ -96,6 +113,12 @@ pnpm --filter @tatiana/ruya-hackathon webhook:replay
 Webhook path:
 
 - `POST /webhooks/elevenlabs`
+
+Signature verification (production-style):
+
+- Set `ELEVENLABS_WEBHOOK_SECRET` to require HMAC verification on incoming webhooks.
+- Optional: `ELEVENLABS_WEBHOOK_TOLERANCE_SECONDS` (default `300`) for timestamp drift checks.
+- `webhook:replay` automatically signs payloads when `ELEVENLABS_WEBHOOK_SECRET` is present.
 
 Generated artifacts:
 

@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -18,11 +19,24 @@ async function main() {
   const url = getArg('url', 'http://localhost:8787/webhooks/elevenlabs');
   const raw = await fs.readFile(SAMPLE_PATH, 'utf-8');
   const payload = JSON.parse(raw);
+  const secret = String(process.env.ELEVENLABS_WEBHOOK_SECRET ?? '').trim();
+
+  const headers = { 'Content-Type': 'application/json' };
+  const body = JSON.stringify(payload);
+
+  if (secret) {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = crypto
+      .createHmac('sha256', secret)
+      .update(`${timestamp}.${body}`)
+      .digest('hex');
+    headers['elevenlabs-signature'] = `t=${timestamp},v0=${signature}`;
+  }
 
   const res = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    headers,
+    body,
   });
 
   const text = await res.text();

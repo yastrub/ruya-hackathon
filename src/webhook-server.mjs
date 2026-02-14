@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import http from 'node:http';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,6 +22,91 @@ function getArg(name, fallback) {
 function safeNumber(value, fallback = 0) {
   const n = Number(value);
   return Number.isFinite(n) ? n : fallback;
+}
+
+function getSignatureHeader(headers) {
+  const direct = headers['elevenlabs-signature'];
+  if (typeof direct === 'string' && direct.trim()) return direct.trim();
+  if (Array.isArray(direct) && direct.length > 0) return String(direct[0]).trim();
+
+  const alt = headers['x-elevenlabs-signature'];
+  if (typeof alt === 'string' && alt.trim()) return alt.trim();
+  if (Array.isArray(alt) && alt.length > 0) return String(alt[0]).trim();
+
+  return '';
+}
+
+function parseSignatureHeader(raw) {
+  const text = String(raw ?? '').trim();
+  if (!text) return { timestamp: null, signatures: [] };
+
+  if (!text.includes('=')) {
+    return { timestamp: null, signatures: [text] };
+  }
+
+  const parts = text.split(',').map((p) => p.trim()).filter(Boolean);
+  let timestamp = null;
+  const signatures = [];
+
+  for (const part of parts) {
+    const [k, v] = part.split('=').map((x) => x.trim());
+    if (!k || !v) continue;
+    if (k === 't' || k === 'timestamp') {
+      timestamp = v;
+      continue;
+    }
+    if (k === 'v0' || k === 'v1' || k === 'sig' || k === 'signature') {
+      signatures.push(v);
+    }
+  }
+
+  return { timestamp, signatures };
+}
+
+function safeCompareHex(a, b) {
+  const aa = Buffer.from(String(a), 'hex');
+  const bb = Buffer.from(String(b), 'hex');
+  if (aa.length === 0 || bb.length === 0 || aa.length !== bb.length) return false;
+  return crypto.timingSafeEqual(aa, bb);
+}
+
+function verifySignature({ rawBody, signatureHeader, secret, toleranceSeconds }) {
+  const parsed = parseSignatureHeader(signatureHeader);
+  const ts = parsed.timestamp;
+  const signatures = parsed.signatures;
+
+  const candidates = [];
+  const bodyOnly = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+  candidates.push(bodyOnly);
+
+  if (ts) {
+    const withTs = crypto
+      .createHmac('sha256', secret)
+      .update(`${ts}.${rawBody}`)
+      .digest('hex');
+    candidates.push(withTs);
+  }
+
+  const provided = signatures.length > 0 ? signatures : ts ? [] : [String(signatureHeader).trim()];
+  const matched = provided.some((sig) => candidates.some((cand) => safeCompareHex(sig, cand)));
+
+  if (!matched) {
+    return { ok: false, reason: 'BAD_SIGNATURE' };
+  }
+
+  if (ts) {
+    const nowSec = Math.floor(Date.now() / 1000);
+    const tsSec = Number(ts);
+    if (!Number.isFinite(tsSec)) {
+      return { ok: false, reason: 'BAD_TIMESTAMP' };
+    }
+    const drift = Math.abs(nowSec - tsSec);
+    if (drift > toleranceSeconds) {
+      return { ok: false, reason: 'SIGNATURE_EXPIRED', driftSeconds: drift };
+    }
+  }
+
+  return { ok: true };
 }
 
 function extractCallEvent(payload) {
@@ -145,6 +231,8 @@ async function handleWebhook(rawBody) {
 async function main() {
   const port = Number(getArg('port', process.env.PORT || '8787'));
   const once = getArg('once', 'false') === 'true';
+  const webhookSecret = String(process.env.ELEVENLABS_WEBHOOK_SECRET ?? '').trim();
+  const signatureToleranceSeconds = safeNumber(process.env.ELEVENLABS_WEBHOOK_TOLERANCE_SECONDS, 300);
 
   const server = http.createServer(async (req, res) => {
     if (req.method !== 'POST' || req.url !== '/webhooks/elevenlabs') {
@@ -158,6 +246,35 @@ async function main() {
     req.on('end', async () => {
       try {
         const rawBody = Buffer.concat(chunks).toString('utf-8');
+
+        if (webhookSecret) {
+          const signatureHeader = getSignatureHeader(req.headers);
+          if (!signatureHeader) {
+            res.writeHead(401, { 'content-type': 'application/json' });
+            res.end(JSON.stringify({ ok: false, error: 'MISSING_SIGNATURE' }));
+            return;
+          }
+
+          const verification = verifySignature({
+            rawBody,
+            signatureHeader,
+            secret: webhookSecret,
+            toleranceSeconds: signatureToleranceSeconds,
+          });
+
+          if (!verification.ok) {
+            res.writeHead(401, { 'content-type': 'application/json' });
+            res.end(
+              JSON.stringify({
+                ok: false,
+                error: verification.reason,
+                driftSeconds: verification.driftSeconds ?? null,
+              }),
+            );
+            return;
+          }
+        }
+
         const result = await handleWebhook(rawBody);
         res.writeHead(result.statusCode, { 'content-type': 'application/json' });
         res.end(JSON.stringify(result.body));
@@ -175,6 +292,13 @@ async function main() {
   server.listen(port, '0.0.0.0', () => {
     console.log(`ElevenLabs webhook stub listening on http://localhost:${port}/webhooks/elevenlabs`);
     console.log(`Artifacts: ${LATEST_PATH}, ${NDJSON_PATH}, ${LEARNING_PATH}`);
+    if (webhookSecret) {
+      console.log(
+        `Signature verification: enabled (ELEVENLABS_WEBHOOK_SECRET set, tolerance=${signatureToleranceSeconds}s).`,
+      );
+    } else {
+      console.log('Signature verification: disabled (set ELEVENLABS_WEBHOOK_SECRET to enable).');
+    }
     if (once) {
       console.log('Mode: once=true (server exits after first valid request).');
     }
