@@ -1,0 +1,34 @@
+{
+  "type": "post_call_transcription",
+  "data": {
+    "conversation_id": "conv_demo_123",
+    "metadata": {
+      "duration_seconds": 345,
+      "start_time": "2026-02-14T12:00:00Z",
+      "end_time": "2026-02-14T12:05:45Z",
+      "dynamic_variables": {
+        "lead_id": "lead-002",
+        "lead_name": "Saeed",
+        "selected_strategy": "consultative",
+        "text_channel": "whatsapp"
+      }
+    },
+    "transcript": [
+      {
+        "sender": "agent",
+        "text": "Hi Saeed, this is an AI assistant following up on your inquiry.",
+        "timestamp": "2026-02-14T12:00:05Z"
+      },
+      {
+        "sender": "user",
+        "text": "I need to know if your process is actually trustworthy.",
+        "timestamp": "2026-02-14T12:00:20Z"
+      },
+      {
+        "sender": "agent",
+        "text": "Totally fair. Let me walk you through real case outcomes and the exact first milestone.",
+        "timestamp": "2026-02-14T12:00:35Z"
+      }
+    ]
+  }
+}

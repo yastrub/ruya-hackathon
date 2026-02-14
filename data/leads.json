@@ -1,0 +1,68 @@
+[
+  {
+    "id": "lead-001",
+    "name": "Mira",
+    "channel": "instagram_dm",
+    "phoneNumber": "+971501000001",
+    "offer": "Premium skin treatment package",
+    "goal": "Book a paid consultation this week",
+    "objectionType": "price",
+    "sentiment": "cautious",
+    "message": "Looks good, but honestly it is expensive. Why should I pay this much?"
+  },
+  {
+    "id": "lead-002",
+    "name": "Saeed",
+    "channel": "whatsapp",
+    "phoneNumber": "+971501000002",
+    "offer": "Real-estate strategy call",
+    "goal": "Book a 20-minute discovery call",
+    "objectionType": "trust",
+    "sentiment": "skeptical",
+    "message": "Everyone says they are experts. How do I know you can actually help?"
+  },
+  {
+    "id": "lead-003",
+    "name": "Lina",
+    "channel": "instagram_dm",
+    "phoneNumber": "+971501000003",
+    "offer": "Career coaching sprint",
+    "goal": "Close a monthly coaching subscription",
+    "objectionType": "timing",
+    "sentiment": "hesitant",
+    "message": "Maybe later. This week is too busy for me."
+  },
+  {
+    "id": "lead-004",
+    "name": "Nour",
+    "channel": "whatsapp",
+    "phoneNumber": "+971501000004",
+    "offer": "Online fitness transformation plan",
+    "goal": "Start a paid trial",
+    "objectionType": "results",
+    "sentiment": "uncertain",
+    "message": "I tried similar programs before and got no results."
+  },
+  {
+    "id": "lead-005",
+    "name": "Rami",
+    "channel": "instagram_dm",
+    "phoneNumber": "+971501000005",
+    "offer": "AI automation setup for SMB",
+    "goal": "Close pilot retainer",
+    "objectionType": "complexity",
+    "sentiment": "overwhelmed",
+    "message": "Sounds powerful, but it also sounds complicated for my team."
+  },
+  {
+    "id": "lead-006",
+    "name": "Dina",
+    "channel": "whatsapp",
+    "phoneNumber": "+971501000006",
+    "offer": "Relationship coaching intensive",
+    "goal": "Book intake session",
+    "objectionType": "urgency",
+    "sentiment": "neutral",
+    "message": "I like it, I just need to think about it a bit more."
+  }
+]

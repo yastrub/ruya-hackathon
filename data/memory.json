@@ -1,0 +1,215 @@
+{
+  "runs": 3,
+  "policy": {
+    "epsilon": 0.1543,
+    "decay": 0.7,
+    "minEpsilon": 0.05
+  },
+  "strategyStats": {
+    "consultative": {
+      "uses": 14,
+      "totalScore": 109.7,
+      "avgScore": 7.8357
+    },
+    "social_proof": {
+      "uses": 2,
+      "totalScore": 14.3,
+      "avgScore": 7.15
+    },
+    "urgent_offer": {
+      "uses": 2,
+      "totalScore": 14.3,
+      "avgScore": 7.15
+    }
+  },
+  "objectionPolicy": {
+    "price": "consultative",
+    "trust": "consultative",
+    "timing": "consultative",
+    "results": "consultative",
+    "complexity": "consultative",
+    "urgency": "consultative"
+  },
+  "history": [
+    {
+      "timestamp": "2026-02-14T12:09:00.328Z",
+      "epoch": 1,
+      "leadId": "lead-001",
+      "objectionType": "price",
+      "strategy": "consultative",
+      "score": 8.1,
+      "conversionProbability": 0.64,
+      "responsePreview": "Totally fair point, Mira. Before recommending anything expensive, I want to map your exact goal: Book a paid consultation this week. If we can solve your price concern with a low-r"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.331Z",
+      "epoch": 1,
+      "leadId": "lead-002",
+      "objectionType": "trust",
+      "strategy": "social_proof",
+      "score": 7.5,
+      "conversionProbability": 0.56,
+      "responsePreview": "Saeed, great question. We recently helped clients with the same concern (trust) and they converted after seeing a guided first win in week 1. For your case (Real-estate strategy ca"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.331Z",
+      "epoch": 1,
+      "leadId": "lead-003",
+      "objectionType": "timing",
+      "strategy": "urgent_offer",
+      "score": 7.2,
+      "conversionProbability": 0.53,
+      "responsePreview": "Lina, understood. To reduce risk, we can lock a fast-start option today and keep commitment light. This lets you test Career coaching sprint quickly and decide from real momentum, "
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.331Z",
+      "epoch": 1,
+      "leadId": "lead-004",
+      "objectionType": "results",
+      "strategy": "consultative",
+      "score": 7.8,
+      "conversionProbability": 0.6,
+      "responsePreview": "Totally fair point, Nour. Before recommending anything expensive, I want to map your exact goal: Start a paid trial. If we can solve your results concern with a low-risk first step"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.332Z",
+      "epoch": 1,
+      "leadId": "lead-005",
+      "objectionType": "complexity",
+      "strategy": "social_proof",
+      "score": 6.8,
+      "conversionProbability": 0.48,
+      "responsePreview": "Rami, great question. We recently helped clients with the same concern (complexity) and they converted after seeing a guided first win in week 1. For your case (AI automation setup"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.332Z",
+      "epoch": 1,
+      "leadId": "lead-006",
+      "objectionType": "urgency",
+      "strategy": "urgent_offer",
+      "score": 7.1,
+      "conversionProbability": 0.51,
+      "responsePreview": "Dina, understood. To reduce risk, we can lock a fast-start option today and keep commitment light. This lets you test Relationship coaching intensive quickly and decide from real m"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.332Z",
+      "epoch": 2,
+      "leadId": "lead-001",
+      "objectionType": "price",
+      "strategy": "consultative",
+      "score": 8.1,
+      "conversionProbability": 0.64,
+      "responsePreview": "Totally fair point, Mira. Before recommending anything expensive, I want to map your exact goal: Book a paid consultation this week. If we can solve your price concern with a low-r"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.332Z",
+      "epoch": 2,
+      "leadId": "lead-002",
+      "objectionType": "trust",
+      "strategy": "consultative",
+      "score": 7.7,
+      "conversionProbability": 0.59,
+      "responsePreview": "Totally fair point, Saeed. Before recommending anything expensive, I want to map your exact goal: Book a 20-minute discovery call. If we can solve your trust concern with a low-ris"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.333Z",
+      "epoch": 2,
+      "leadId": "lead-003",
+      "objectionType": "timing",
+      "strategy": "consultative",
+      "score": 7.7,
+      "conversionProbability": 0.59,
+      "responsePreview": "Totally fair point, Lina. Before recommending anything expensive, I want to map your exact goal: Close a monthly coaching subscription. If we can solve your timing concern with a l"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.334Z",
+      "epoch": 2,
+      "leadId": "lead-004",
+      "objectionType": "results",
+      "strategy": "consultative",
+      "score": 7.8,
+      "conversionProbability": 0.6,
+      "responsePreview": "Totally fair point, Nour. Before recommending anything expensive, I want to map your exact goal: Start a paid trial. If we can solve your results concern with a low-risk first step"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.334Z",
+      "epoch": 2,
+      "leadId": "lead-005",
+      "objectionType": "complexity",
+      "strategy": "consultative",
+      "score": 8,
+      "conversionProbability": 0.62,
+      "responsePreview": "Totally fair point, Rami. Before recommending anything expensive, I want to map your exact goal: Close pilot retainer. If we can solve your complexity concern with a low-risk first"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.334Z",
+      "epoch": 2,
+      "leadId": "lead-006",
+      "objectionType": "urgency",
+      "strategy": "consultative",
+      "score": 7.6,
+      "conversionProbability": 0.58,
+      "responsePreview": "Totally fair point, Dina. Before recommending anything expensive, I want to map your exact goal: Book intake session. If we can solve your urgency concern with a low-risk first ste"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.334Z",
+      "epoch": 3,
+      "leadId": "lead-001",
+      "objectionType": "price",
+      "strategy": "consultative",
+      "score": 8.1,
+      "conversionProbability": 0.64,
+      "responsePreview": "Totally fair point, Mira. Before recommending anything expensive, I want to map your exact goal: Book a paid consultation this week. If we can solve your price concern with a low-r"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.334Z",
+      "epoch": 3,
+      "leadId": "lead-002",
+      "objectionType": "trust",
+      "strategy": "consultative",
+      "score": 7.7,
+      "conversionProbability": 0.59,
+      "responsePreview": "Totally fair point, Saeed. Before recommending anything expensive, I want to map your exact goal: Book a 20-minute discovery call. If we can solve your trust concern with a low-ris"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.335Z",
+      "epoch": 3,
+      "leadId": "lead-003",
+      "objectionType": "timing",
+      "strategy": "consultative",
+      "score": 7.7,
+      "conversionProbability": 0.59,
+      "responsePreview": "Totally fair point, Lina. Before recommending anything expensive, I want to map your exact goal: Close a monthly coaching subscription. If we can solve your timing concern with a l"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.335Z",
+      "epoch": 3,
+      "leadId": "lead-004",
+      "objectionType": "results",
+      "strategy": "consultative",
+      "score": 7.8,
+      "conversionProbability": 0.6,
+      "responsePreview": "Totally fair point, Nour. Before recommending anything expensive, I want to map your exact goal: Start a paid trial. If we can solve your results concern with a low-risk first step"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.335Z",
+      "epoch": 3,
+      "leadId": "lead-005",
+      "objectionType": "complexity",
+      "strategy": "consultative",
+      "score": 8,
+      "conversionProbability": 0.62,
+      "responsePreview": "Totally fair point, Rami. Before recommending anything expensive, I want to map your exact goal: Close pilot retainer. If we can solve your complexity concern with a low-risk first"
+    },
+    {
+      "timestamp": "2026-02-14T12:09:00.335Z",
+      "epoch": 3,
+      "leadId": "lead-006",
+      "objectionType": "urgency",
+      "strategy": "consultative",
+      "score": 7.6,
+      "conversionProbability": 0.58,
+      "responsePreview": "Totally fair point, Dina. Before recommending anything expensive, I want to map your exact goal: Book intake session. If we can solve your urgency concern with a low-risk first ste"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "VOICE_MODE": "dry-run",
+  "ELEVENLABS_OUTBOUND_CALL_URL": "https://api.elevenlabs.io/v1/convai/twilio/outbound-call",
+  "ELEVENLABS_API_KEY": "xi_***",
+  "ELEVENLABS_AGENT_ID": "agent_***",
+  "ELEVENLABS_AGENT_PHONE_NUMBER_ID": "pn_***",
+  "ELEVENLABS_LANGUAGE": "en",
+  "ELEVENLABS_DYNAMIC_VARIABLES_JSON": {
+    "brand_name": "Ruya Demo",
+    "campaign": "hackathon"
+  },
+  "ELEVENLABS_CONVERSATION_INIT_JSON": {
+    "conversation_config_override": {
+      "agent": {
+        "first_message": "Hi, this is an AI assistant following up on your request."
+      }
+    }
+  }
+}
